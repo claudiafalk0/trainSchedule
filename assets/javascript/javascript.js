@@ -36,18 +36,25 @@ var firebaseConfig = {
       
   })
 
+  // function time_converter(num){
+  //   var toHours = Math.floor(num/60);
+  //   var toMinutes = num % 60;
+  //   return toHours + ":" + toMinutes;
+  // }
  $("#submitBtn").on("click", function(event){
      event.preventDefault();
 
      var trainName = $("#trainName").val().trim();
      var destination = $("#destination").val().trim();
-     var firstTrainTime = $("#firstTraintime").val();
-     var Frequency = parseInt($("#Frequency").val().trim());
+     var firstTrainTime = document.getElementById("militaryTime").value;
+     var Frequency = $("#Frequency").val().trim();
+     var timeConverter = moment().minutes(Frequency);
      var date = new Date();
-     var hours = date.getHours();
-     var minutes = date.getMinutes();
-     var nextArrival = (hours + minutes) + Frequency;
-     var minutesAway = nextArrival - (hours + minutes);
-
-     console.log(trainName, destination, firstTrainTime, Frequency, nextArrival, minutesAway);
+     var hours = ('0' + (((date.getHours() + 11) % 12) + 1));
+     var minutes = ('0' + date.getMinutes()).slice(-2);
+     var currentTime = hours + ":" + minutes;
+     var nextArrival = firstTrainTime + timeConverter;
+     var minutesAway = currentTime - nextArrival;
+     
+     console.log("FirstTrainTime: " + firstTrainTime, "Frequency: " + Frequency, "Next Arrival: " + nextArrival, "Minutes Away: " + minutesAway);
  }) 
