@@ -36,25 +36,29 @@ var firebaseConfig = {
       
   })
 
-  // function time_converter(num){
-  //   var toHours = Math.floor(num/60);
-  //   var toMinutes = num % 60;
-  //   return toHours + ":" + toMinutes;
-  // }
+ 
  $("#submitBtn").on("click", function(event){
      event.preventDefault();
 
      var trainName = $("#trainName").val().trim();
      var destination = $("#destination").val().trim();
-     var firstTrainTime = document.getElementById("militaryTime").value;
+     var firstTime = $(("#militaryTime")).val().trim();
+     var firstTrainTime =  moment(firstTime, "HH:mm");
+     var diffTime = moment().diff(moment(firstTrainTime), "minutes");
      var Frequency = $("#Frequency").val().trim();
-     var timeConverter = moment().minutes(Frequency);
-     var date = new Date();
-     var hours = ('0' + (((date.getHours() + 11) % 12) + 1));
-     var minutes = ('0' + date.getMinutes()).slice(-2);
-     var currentTime = hours + ":" + minutes;
-     var nextArrival = firstTrainTime + timeConverter;
-     var minutesAway = currentTime - nextArrival;
+     var tRemainder = diffTime % Frequency;
+     var nextArrival = moment().add(minutesAway, "minutes");
+     var minutesAway = Frequency - tRemainder;
      
-     console.log("FirstTrainTime: " + firstTrainTime, "Frequency: " + Frequency, "Next Arrival: " + nextArrival, "Minutes Away: " + minutesAway);
+     var newTrain = {
+       name: trainName,
+       destination: destination,
+       frequency: Frequency,
+       nextTrain: nextArrival,
+       minutesAway: minutesAway
+     };
+
+     database.ref().push(newTrain);
+
+     $("#trainName".val(""))
  }) 
