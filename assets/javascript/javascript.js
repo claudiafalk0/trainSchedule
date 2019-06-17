@@ -38,7 +38,7 @@ var firebaseConfig = {
 
      var trainName = $("#trainName").val().trim();
      var destination = $("#destination").val().trim();
-     var firstTime = moment($("#militaryTime").val().trim(), "hh:mm").format("X");
+     var firstTime = moment($("#firstTraintime").val().trim(), "hh:mm").format("X");
      var Frequency = $("#Frequency").val().trim();
 
      var newTrain = {
@@ -56,7 +56,7 @@ var firebaseConfig = {
       $("#trainName").val("");
       $("#destination").val("");
       $("#Frequency").val("");
-      $("#militaryTime").val("");
+      $("#firstTraintime").val("");
     }) 
     
     database.ref().on("child_added", function(childSnapshot){
@@ -66,16 +66,21 @@ var firebaseConfig = {
       var trainFirstTime = childSnapshot.val().first_train_time;
       var trainFrequency = childSnapshot.val().frequency;
 
+      console.log(newTrainName);
+      console.log(trainDestination);
+      console.log(trainFirstTime);
+      console.log(trainFrequency);
+
       
       var trainTimeConverted =  moment(trainFirstTime, "HH:mm");
       console.log(trainTimeConverted);
       var diffTime = moment().diff(trainTimeConverted, "minutes");
       console.log("Difference in Time: " + diffTime);
+      var tRemainder = diffTime % trainFrequency;
+      var minutesAway = trainFrequency - tRemainder;
       var nextArrival = moment().add(minutesAway, "minutes");
       console.log("Arrival time: " + moment(nextArrival).format("hh:mm"));
-      var tRemainder = diffTime % trainFrequency;
       console.log(tRemainder);
-      var minutesAway = trainFrequency - tRemainder;
       console.log("Minutes until Train: " + minutesAway)
  
 
